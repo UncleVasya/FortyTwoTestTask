@@ -35,3 +35,29 @@ class PersonIndexPageTest(LiveServerTestCase):
 
         for entry in person.contacts.split('\r\n'):
             self.assertIn(entry, body.text)
+
+    def test_only_one_person_shown(self):
+        """
+            Rendered page should contain data
+            only for one Person.
+        """
+        self.browser.get(self.live_server_url)
+        body = self.browser.find_element_by_tag_name('body')
+
+        name_labels = body.find_elements_by_id('label_name')
+        surname_labels = body.find_elements_by_id('label_surname')
+        birth_labels = body.find_elements_by_id('label_birth')
+        bio_labels = body.find_elements_by_id('label_bio')
+        email_labels = body.find_elements_by_id('label_email')
+        jabber_labels = body.find_elements_by_id('label_jabber')
+        skype_labels = body.find_elements_by_id('label_skype')
+        contacts_labels = body.find_elements_by_id('label_contacts')
+
+        self.assertEqual(1, len(name_labels))
+        self.assertEqual(1, len(surname_labels))
+        self.assertEqual(1, len(birth_labels))
+        self.assertEqual(1, len(bio_labels))
+        self.assertEqual(1, len(email_labels))
+        self.assertEqual(1, len(jabber_labels))
+        self.assertEqual(1, len(skype_labels))
+        self.assertEqual(1, len(contacts_labels))
