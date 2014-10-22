@@ -1,16 +1,55 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% load staticfiles %}
 
-<head lang="en">
-    <meta charset="UTF-8">
+{% block page_styles %}
+    <link rel="stylesheet" href="{% static 'person/css/base.css' %}">
+{% endblock page_styles %}
 
-    {% block styles %}
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-    {% endblock %}
-</head>
+{% block content %}
+    <h1> 42 Coffee Cups test assignment</h1>
 
-<body>
-    <h1> 42 Coffee Cups test assignment </h1>
-</body>
+    <div class="row">
+        <div class="col-md-5">
+            <br>
+            <div class="labels">
+                <p> Name: </p>
+                <p> Last name: </p>
+                <p> Date of birth: </p>
+            </div>
 
-</html>
+            <div class="values">
+                <p> {{ person.name }} </p>
+                <p> {{ person.surname }} </p>
+                <p> {{ person.birth }}</p>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <p> Contacts </p>
+            <div class="labels">
+                <p> Email: </p>
+                <p> Jabber: </p>
+                <p> Skype: </p>
+            </div>
+
+            <div class="values">
+                <p> {{ person.email }} </p>
+                <p> {{ person.jabber }} </p>
+                <p> {{ person.skype }} </p>
+            </div>
+        </div>
+    </div> <!-- row -->
+
+    <div class="row">
+        <div class="col-md-5">
+            <p class="labels"> Bio: </p>
+            {{ person.bio|linebreaks }}
+        </div>
+
+        <div class="col-md-7">
+            <p class="labels"> Other contacts: </p>
+            {{ person.contacts|linebreaks }}
+        </div>
+    </div> <!-- row -->
+
+{% endblock %}
