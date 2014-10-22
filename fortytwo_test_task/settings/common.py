@@ -44,6 +44,7 @@ INSTALLED_APPS = (
 
     'south',
     'apps.person',
+    'selenium_tests'
 )
 
 MIDDLEWARE_CLASSES = (
