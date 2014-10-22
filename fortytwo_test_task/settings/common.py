@@ -120,6 +120,7 @@ STATICFILES_FINDERS = (
 # Fixtures (initial data)
 FIXTURE_DIRS = (
     os.path.join(BASE_DIR, 'fixtures'),
+    os.path.join(BASE_DIR, 'apps/person/fixtures')
 )
 
 
