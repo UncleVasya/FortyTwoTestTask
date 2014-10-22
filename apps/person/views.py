@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.views import generic
+from apps.person.models import Person
 
-# Create your views here.
+
+class IndexView(generic.DetailView):
+    model = Person
+
+    def get_object(self):
+        pass
