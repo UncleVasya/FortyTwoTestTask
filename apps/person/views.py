@@ -1,9 +1,11 @@
+from django.http import Http404
 from django.views import generic
 from apps.person.models import Person
 
 
 class IndexView(generic.DetailView):
-    model = Person
-
     def get_object(self):
-        pass
+        person = Person.objects.first()
+        if not person:
+            raise Http404
+        return person
