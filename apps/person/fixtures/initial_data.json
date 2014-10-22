@@ -1,0 +1,31 @@
+[
+    {
+        "pk": 1,
+        "model": "person.person",
+        "fields": {
+            "bio": "Android developer at 42cc\r\nDjango candidate at 42cc",
+            "surname": "Ovcharenko",
+            "name": "Oleg",
+            "contacts": "Phone 1\r\nPhone 2\r\nPhone 3",
+            "birth": "1991-01-01",
+            "skype": "unclevasya_",
+            "jabber": "unclevasya@khavr.com",
+            "email": "unclevasyaai@gmail.com"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "person.person",
+        "fields": {
+            "bio": "I know nothing",
+            "surname": "Snow",
+            "name": "John",
+            "contacts": "Wall, Westeros",
+            "birth": "1991-01-01",
+            "skype": "johnny",
+            "jabber": "johhny@wall.com",
+            "email": "johnny@westeros.com"
+        }
+    }
+]
+
