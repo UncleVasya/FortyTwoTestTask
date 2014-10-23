@@ -4,13 +4,6 @@ from apps.person.models import Person
 
 
 class IndexViewTests(TestCase):
-    def setUp(self):
-        super(IndexViewTests, self).setUp()
-        self.person1 = Person.objects.all()[0]
-        self.person2 = Person.objects.all()[1]
-
-
-class IndexViewTests(TestCase):
 
     def check_person_render(self, person, content):
         """
