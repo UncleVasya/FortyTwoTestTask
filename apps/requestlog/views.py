@@ -3,6 +3,8 @@ from apps.requestlog.models import RequestLog
 
 
 class RequestsView(generic.ListView):
+    REQUESTS_TO_SHOW = 10
 
     def get_queryset(self):
-        return RequestLog.objects.all().select_related()
+        requests = RequestLog.objects.all()
+        return requests[:self.REQUESTS_TO_SHOW]
