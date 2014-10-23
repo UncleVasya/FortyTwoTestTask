@@ -9,6 +9,45 @@ class IndexViewTests(TestCase):
         self.person1 = Person.objects.all()[0]
         self.person2 = Person.objects.all()[1]
 
+
+class IndexViewTests(TestCase):
+
+    def check_person_render(self, person, content):
+        """
+            Helper function to check rendered html
+            for correct person data
+        """
+        # check that only one person is shown
+        self.assertEqual(1, content.count('id="label_name"'))
+        self.assertEqual(1, content.count('id="label_surname"'))
+        self.assertEqual(1, content.count('id="label_birth"'))
+        self.assertEqual(1, content.count('id="label_bio"'))
+        self.assertEqual(1, content.count('id="label_email"'))
+        self.assertEqual(1, content.count('id="label_jabber"'))
+        self.assertEqual(1, content.count('id="label_skype"'))
+        self.assertEqual(1, content.count('id="label_contacts"'))
+
+        # check that person data is correct
+        self.assertIn(person.name, content)
+        self.assertIn(person.surname, content)
+        self.assertIn(person.email, content)
+        self.assertIn(person.jabber, content)
+        self.assertIn(person.skype, content)
+
+        birth_date = person.birth.strftime('%b. %d, %Y')
+        self.assertIn(birth_date, content)
+
+        for entry in person.bio.split('\r\n'):
+            self.assertIn(entry, content)
+
+        for entry in person.contacts.split('\r\n'):
+            self.assertIn(entry, content)
+
+    def setUp(self):
+        super(IndexViewTests, self).setUp()
+        self.person1 = Person.objects.all()[0]
+        self.person2 = Person.objects.all()[1]
+
     def test_index_404(self):
         """
             If there are no persons in DB
@@ -42,6 +81,7 @@ class IndexViewTests(TestCase):
 
         # check html template
         self.assertTemplateUsed(resp, 'person/person_detail.html')
+        self.check_person_render(person, resp.content)
 
     def test_index_success_after_removal(self):
         """
@@ -63,3 +103,4 @@ class IndexViewTests(TestCase):
 
         # check html template
         self.assertTemplateUsed(resp, 'person/person_detail.html')
+        self.check_person_render(person, resp.content)
