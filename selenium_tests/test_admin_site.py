@@ -36,11 +36,15 @@ class AdminSiteTest(LiveServerTestCase):
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('Site administration', body.text)
 
-    def test_person_added_to_admin(self):
+    def test_models_added_to_admin(self):
         """
-            Person model should be added to the admin site.
+            These models should be added to the admin site:
+            Person, RequestLog.
         """
         self.login_to_admin()
 
         person_links = self.browser.find_elements_by_css_selector("[href*='admin/person']")
         self.assertTrue(len(person_links) > 0)
+
+        requestlog_links = self.browser.find_elements_by_css_selector("[href*='admin/requestlog']")
+        self.assertTrue(len(requestlog_links) > 0)

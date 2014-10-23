@@ -44,6 +44,7 @@ INSTALLED_APPS = (
 
     'south',
     'apps.person',
+    'apps.requestlog',
     'selenium_tests'
 )
 
@@ -54,6 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.requestlog.middlewares.RequestLogMiddleware',
 )
 
 ROOT_URLCONF = 'fortytwo_test_task.urls'
@@ -76,7 +78,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
