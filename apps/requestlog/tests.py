@@ -24,7 +24,7 @@ class RequestLoggingTests(TestCase):
             Helper function to check rendered html
             for correct requests data
         """
-        rendered_requests = content.count('class="request')
+        rendered_requests = content.count('class="request ')
         self.assertEqual(rendered_requests, request_list.count())
 
         for request in request_list:
