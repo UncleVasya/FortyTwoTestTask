@@ -14,8 +14,8 @@ class RequestLoggingTests(TestCase):
         reverse('admin:index'),
         '/SOME/WRONG/URL',
     )
-    REQUESTS_TO_SHOW = 10
-    REQUESTS_TO_MAKE = REQUESTS_TO_SHOW * 3
+    MAX_REQUESTS_TO_SHOW = 10
+    REQUESTS_TO_MAKE = MAX_REQUESTS_TO_SHOW * 3
 
     requests_done = []
 
@@ -71,7 +71,7 @@ class RequestLoggingTests(TestCase):
         self.assertTrue('requestlog_list' in resp.context)
 
         returned = resp.context['requestlog_list']
-        self.assertEqual(self.REQUESTS_TO_SHOW, returned.count())
+        self.assertEqual(self.MAX_REQUESTS_TO_SHOW, returned.count())
 
         for request, db_request in zip(returned, RequestLog.objects.all()):
             self.assertEqual(db_request, request)
@@ -110,7 +110,7 @@ class RequestLoggingTests(TestCase):
 
         # make few requests,
         # but less than REQUESTS_TO_SHOW value
-        req_count = self.REQUESTS_TO_SHOW / 2
+        req_count = self.MAX_REQUESTS_TO_SHOW / 2
         for _ in range(req_count):
             self.client.get(reverse('admin:index'))
 
