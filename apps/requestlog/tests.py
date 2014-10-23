@@ -19,6 +19,18 @@ class RequestLoggingTests(TestCase):
 
     requests_done = []
 
+    def check_requests_render(self, request_list, content):
+        """
+            Helper function to check rendered html
+            for correct requests data
+        """
+        rendered_requests = content.count('class="request')
+        self.assertEqual(rendered_requests, request_list.count())
+
+        for request in request_list:
+            self.assertIn(str(request.id), content)
+            self.assertIn(request.path, content)
+
     def setUp(self):
         super(RequestLoggingTests, self).setUp()
         RequestLog.objects.all().delete()
@@ -59,7 +71,6 @@ class RequestLoggingTests(TestCase):
             self.assertIsInstance(request_log.time_start, datetime.datetime)
             self.assertIsInstance(request_log.time_end,   datetime.datetime)
 
-
     def test_requests_page_with_full_db(self):
         """
             Amount of objects returned from view
@@ -67,16 +78,21 @@ class RequestLoggingTests(TestCase):
         """
         resp = self.client.get(reverse('requestlog:requests'))
 
+        # check if we have request list in response
         self.assertEqual(resp.status_code, 200)
         self.assertTrue('requestlog_list' in resp.context)
 
+        # check if requests count is correct
         returned = resp.context['requestlog_list']
         self.assertEqual(self.MAX_REQUESTS_TO_SHOW, returned.count())
 
+        # check if requests are correct
         for request, db_request in zip(returned, RequestLog.objects.all()):
             self.assertEqual(db_request, request)
 
+        # check html render
         self.assertTemplateUsed('requestslog/requestlog_list.html')
+        self.check_requests_render(returned, resp.content)
 
     def test_request_page_with_empty_db(self):
         """
@@ -89,7 +105,7 @@ class RequestLoggingTests(TestCase):
         RequestLog.objects.all().delete()
         resp = self.client.get(reverse('requestlog:requests'))
 
-        # request above should be logged to DB
+        # request above should be logged into DB
         self.assertEqual(1, RequestLog.objects.all().count())
 
         self.assertEqual(resp.status_code, 200)
@@ -100,6 +116,7 @@ class RequestLoggingTests(TestCase):
         self.assertEqual(RequestLog.objects.first(), returned[0])
 
         self.assertTemplateUsed('requestlog/requestlog_list.html')
+        self.check_requests_render(returned, resp.content)
 
     def test_request_page_with_almost_empty_db(self):
         """
@@ -124,3 +141,4 @@ class RequestLoggingTests(TestCase):
         self.assertEqual(req_count, returned.count())
 
         self.assertTemplateUsed('requestslog/requestlog_list.html')
+        self.check_requests_render(returned, resp.content)
