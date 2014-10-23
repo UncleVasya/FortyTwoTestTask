@@ -1,3 +1,16 @@
 from django.db import models
 
-# Create your models here.
+
+class RequestLog(models.Model):
+    # data
+    path = models.CharField(max_length=300)
+    method = models.CharField(max_length=4)
+    query = models.CharField(max_length=500, null=True, blank=True)
+    address = models.IPAddressField(null=True, blank=True)
+    # time and result
+    time_start = models.DateTimeField()
+    time_end = models.DateTimeField()
+    response_code = models.IntegerField()
+
+    def __unicode__(self):
+        return "%s  %s  %s" % (self.path, self.address, str(self.time_start))

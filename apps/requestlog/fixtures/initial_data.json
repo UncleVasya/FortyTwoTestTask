@@ -1,0 +1,43 @@
+[
+    {
+        "pk": 1,
+        "model": "requestlog.requestlog",
+        "fields": {
+            "time_start": "2014-10-04T11:28:50.646Z",
+            "response_code": 200,
+            "time_end": "2014-10-04T11:28:50.727Z",
+            "query": "",
+            "address": "127.0.0.1:8000",
+            "path": "/admin/jsi18n/",
+            "method": "GET"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "requestlog.requestlog",
+        "fields": {
+            "time_start": "2014-10-04T11:29:11.046Z",
+            "response_code": 404,
+            "time_end": "2014-10-04T11:29:11.146Z",
+            "query": "",
+            "address": "127.0.0.1:8000",
+            "path": "/some/wrong/url/",
+            "method": "POST"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "requestlog.requestlog",
+        "fields": {
+            "time_start": "2014-10-04T11:29:12.784Z",
+            "response_code": 404,
+            "time_end": "2014-10-04T11:29:12.909Z",
+            "query": "",
+            "address": "127.0.0.1:8000",
+            "path": "/another/wrong/url/",
+            "method": "GET"
+        }
+    }
+]
+
+
