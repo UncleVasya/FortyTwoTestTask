@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'south',
     'apps.person',
     'apps.requestlog',
+    'apps.core',
     'selenium_tests'
 )
 
