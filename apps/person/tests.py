@@ -5,36 +5,28 @@ from apps.person.models import Person
 
 class IndexViewTests(TestCase):
 
-    def check_person_render(self, person, content):
+    def is_person_shown(self, person, content):
         """
-            Helper function to check rendered html
-            for correct person data
+            Helper function to check if rendered html
+            contains data about specific person
         """
-        # check that only one person is shown
-        self.assertEqual(1, content.count('id="label_name"'))
-        self.assertEqual(1, content.count('id="label_surname"'))
-        self.assertEqual(1, content.count('id="label_birth"'))
-        self.assertEqual(1, content.count('id="label_bio"'))
-        self.assertEqual(1, content.count('id="label_email"'))
-        self.assertEqual(1, content.count('id="label_jabber"'))
-        self.assertEqual(1, content.count('id="label_skype"'))
-        self.assertEqual(1, content.count('id="label_contacts"'))
-
-        # check that person data is correct
-        self.assertIn(person.name, content)
-        self.assertIn(person.surname, content)
-        self.assertIn(person.email, content)
-        self.assertIn(person.jabber, content)
-        self.assertIn(person.skype, content)
+        result = True
+        result = result and (person.name in content)
+        result = result and (person.surname in content)
+        result = result and (person.email in content)
+        result = result and (person.jabber in content)
+        result = result and (person.skype in content)
 
         birth_date = person.birth.strftime('%b. %d, %Y')
-        self.assertIn(birth_date, content)
+        result = result and (birth_date in content)
 
         for entry in person.bio.split('\r\n'):
-            self.assertIn(entry, content)
+            result = result and (entry in content)
 
         for entry in person.contacts.split('\r\n'):
-            self.assertIn(entry, content)
+            result = result and (entry in content)
+
+        return result
 
     def setUp(self):
         super(IndexViewTests, self).setUp()
@@ -72,9 +64,10 @@ class IndexViewTests(TestCase):
         person = resp.context['person']
         self.assertEqual(person, self.person1)
 
-        # check html template
+        # check html render
         self.assertTemplateUsed(resp, 'person/person_detail.html')
-        self.check_person_render(person, resp.content)
+        self.assertTrue(self.is_person_shown(person, resp.content))
+        self.assertFalse(self.is_person_shown(self.person2, resp.content))
 
     def test_index_success_after_removal(self):
         """
@@ -94,6 +87,7 @@ class IndexViewTests(TestCase):
         person = resp.context['person']
         self.assertEqual(person, self.person2)
 
-        # check html template
+        # check html render
         self.assertTemplateUsed(resp, 'person/person_detail.html')
-        self.check_person_render(person, resp.content)
+        self.assertTrue(self.is_person_shown(person, resp.content))
+        self.assertFalse(self.is_person_shown(self.person1, resp.content))
