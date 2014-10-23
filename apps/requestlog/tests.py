@@ -10,6 +10,7 @@ from apps.requestlog.models import RequestLog
 
 class RequestLoggingTests(TestCase):
     REQUEST_URLS = (
+        reverse('requestlog:requests'),
         reverse('admin:index'),
         '/SOME/WRONG/URL',
     )
@@ -57,3 +58,69 @@ class RequestLoggingTests(TestCase):
 
             self.assertIsInstance(request_log.time_start, datetime.datetime)
             self.assertIsInstance(request_log.time_end,   datetime.datetime)
+
+
+    def test_requests_page_with_full_db(self):
+        """
+            Amount of objects returned from view
+            should match REQUESTS_TO_SHOW value
+        """
+        resp = self.client.get(reverse('requestlog:requests'))
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('requestlog_list' in resp.context)
+
+        returned = resp.context['requestlog_list']
+        self.assertEqual(self.REQUESTS_TO_SHOW, returned.count())
+
+        for request, db_request in zip(returned, RequestLog.objects.all()):
+            self.assertEqual(db_request, request)
+
+        self.assertTemplateUsed('requestslog/requestlog_list.html')
+
+    def test_request_page_with_empty_db(self):
+        """
+            View should not return error or 404.
+            It must return request that was just executed.
+
+            I.e. requests should be logged to DB
+            _before_ view processes them.
+        """
+        RequestLog.objects.all().delete()
+        resp = self.client.get(reverse('requestlog:requests'))
+
+        # request above should be logged to DB
+        self.assertEqual(1, RequestLog.objects.all().count())
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('requestlog_list' in resp.context)
+
+        returned = resp.context['requestlog_list']
+        self.assertEqual(1, returned.count())
+        self.assertEqual(RequestLog.objects.first(), returned[0])
+
+        self.assertTemplateUsed('requestlog/requestlog_list.html')
+
+    def test_request_page_with_almost_empty_db(self):
+        """
+        if stored requests < REQUESTS_TO_SHOW then
+            returned requests = stored requests
+        """
+        RequestLog.objects.all().delete()
+
+        # make few requests,
+        # but less than REQUESTS_TO_SHOW value
+        req_count = self.REQUESTS_TO_SHOW / 2
+        for _ in range(req_count):
+            self.client.get(reverse('admin:index'))
+
+        resp = self.client.get(reverse('requestlog:requests'))
+        req_count += 1
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('requestlog_list' in resp.context)
+
+        returned = resp.context['requestlog_list']
+        self.assertEqual(req_count, returned.count())
+
+        self.assertTemplateUsed('requestslog/requestlog_list.html')
