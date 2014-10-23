@@ -62,14 +62,14 @@ class RequestLoggingTests(TestCase):
             real_request = real_data['request']
             real_response = real_data['response_code']
 
-            self.assertEqual(request_log.path,          real_request.path)
-            self.assertEqual(request_log.method,        real_request.method)
-            self.assertEqual(request_log.address,       real_request.get_host())
-            self.assertEqual(request_log.query,         real_request.META['QUERY_STRING'])
+            self.assertEqual(request_log.path, real_request.path)
+            self.assertEqual(request_log.method, real_request.method)
+            self.assertEqual(request_log.address, real_request.get_host())
+            self.assertEqual(request_log.query, real_request.META['QUERY_STRING'])
             self.assertEqual(request_log.response_code, real_response)
 
             self.assertIsInstance(request_log.time_start, datetime.datetime)
-            self.assertIsInstance(request_log.time_end,   datetime.datetime)
+            self.assertIsInstance(request_log.time_end, datetime.datetime)
 
     def test_requests_page_with_full_db(self):
         """
