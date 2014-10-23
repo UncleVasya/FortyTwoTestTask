@@ -2,4 +2,48 @@
 
 {% block content %}
     <h1> Requests log</h1>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Time</th>
+                    <th>Method</th>
+                    <th>Path</th>
+                    <th>Address</th>
+                    <th>Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requestlog_list %}
+                    <!-- color row accordingly to response status -->
+                    {% if request.response_code == 0 %}
+                        <tr class="request warning">
+                    {% elif request.response_code >= 400 %}
+                        <tr class="request danger">
+                    {% else %}
+                        <tr class="request success">
+                    {% endif %}
+                            <td> {{ request.pk }} </td>
+                            <td> {{ request.time_start }} </td>
+                            <td> {{ request.method }} </td>
+                            <td> {{ request.path }} </td>
+                            <td> {{ request.address }} </td>
+
+                            {% if request.response_code != 0 %}
+                                <td> {{ request.response_code }} </td>
+                            {% else %}
+                                <td> %response_code% </td> <!-- placeholder to fill later -->
+                            {%  endif %}
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <hr>
+
+    <a href={% url 'person:index'%}> main page </a>
+
 {% endblock %}
