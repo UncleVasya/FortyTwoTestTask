@@ -1,3 +1,4 @@
 Django==1.6.7
 South>=1.0
 Selenium==2.43.0
+Pillow>=2.6.0

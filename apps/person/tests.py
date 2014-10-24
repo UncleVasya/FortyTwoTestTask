@@ -1,6 +1,8 @@
+import os
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.datetime_safe import date
+import apps
 from apps.person.models import Person
 
 
@@ -193,3 +195,37 @@ class UpdateViewTests(TestCase):
         new_person = Person.objects.first()
         self.assertEqual(old_person.name, new_person.name)
         self.assertRedirects(resp, self.LOGIN_REDIRECT_URL)
+
+    def test_update_with_correct_photo(self):
+        """
+            Person photo should be updated.
+
+            User should be redirected to the index page.
+        """
+        person = Person.objects.first()
+
+        app_dir = os.path.abspath(apps.person.__path__[0])
+        with open(os.path.join(app_dir, 'test_media/photo.jpg')) as photo:
+            self.new_data['photo'] = photo
+
+            resp = self.client.post(self.UPDATE_URL, self.new_data)
+            self.assertRedirects(resp, self.SUCCESS_REDIRECT_URL)
+
+            updated_person = Person.objects.first()
+            self.assertNotEqual(person.photo, updated_person.photo)
+
+            os.remove(updated_person.photo.path)
+
+    def test_update_with_incorrect_photo(self):
+        """
+            User should see update page again
+            with corresponding error.
+        """
+        app_dir = os.path.abspath(apps.person.__path__[0])
+        with open(os.path.join(app_dir, 'test_media/incorrect_photo.jpg')) as photo:
+            self.new_data['photo'] = photo
+
+            resp = self.client.post(self.UPDATE_URL, self.new_data)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertTrue('photo' in resp.context['form'].errors)
