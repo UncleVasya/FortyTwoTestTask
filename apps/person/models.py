@@ -6,6 +6,7 @@ class Person(models.Model):
     name = models.CharField(max_length=200)
     surname = models.CharField(max_length=200)
     birth = models.DateField(null=True, blank=True)
+    photo = models.ImageField(upload_to='photos', null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     # contacts data
     email = models.EmailField(null=True, blank=True)
