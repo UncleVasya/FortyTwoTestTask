@@ -9,3 +9,7 @@ class IndexView(generic.DetailView):
         if not person:
             raise Http404
         return person
+
+
+class PersonUpdateView(generic.View):
+    pass

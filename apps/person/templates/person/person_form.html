@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block page_styles %}
+    <link rel="stylesheet" href="{% static 'person/css/base.css' %}">
+{% endblock page_styles %}
+
+{% block content %}
+    <h1> 42 Coffee Cups test assignment</h1>
+
+    <h1> 42 Coffee Cups test assignment</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <input type="submit" value="Update" />
+    </form>
+
+{% endblock %}
