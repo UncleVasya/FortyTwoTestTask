@@ -128,3 +128,39 @@ class UpdateViewTests(TestCase):
         self.assertEqual(person.contacts,   self.new_data['contacts'])
 
         self.assertRedirects(resp, self.SUCCESS_REDIRECT_URL)
+
+    def test_update_with_invalid_birth(self):
+        """
+            If entered birth date is invalid,
+            user should see update page again
+            with error message.
+        """
+        self.new_data['birth'] = 'bla-bla-bla'
+        resp = self.client.post(self.UPDATE_URL, self.new_data)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('birth' in resp.context['form'].errors)
+
+    def test_update_with_invalid_email(self):
+        """
+            If entered email is invalid,
+            user should see update page again
+            with error message.
+        """
+        self.new_data['email'] = 'bla-bla-bla'
+        resp = self.client.post(self.UPDATE_URL, self.new_data)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('email' in resp.context['form'].errors)
+
+    def test_update_with_invalid_jabber(self):
+        """
+            If entered jabber is invalid,
+            user should see update page again
+            with error message.
+        """
+        self.new_data['jabber'] = 'bla-bla-bla'
+        resp = self.client.post(self.UPDATE_URL, self.new_data)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('jabber' in resp.context['form'].errors)
