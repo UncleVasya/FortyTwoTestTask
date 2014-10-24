@@ -96,6 +96,7 @@ class IndexViewTests(TestCase):
 
 class UpdateViewTests(TestCase):
     UPDATE_URL = reverse('person:person_update')
+    LOGIN_REDIRECT_URL = reverse('login') + '?next=' + UPDATE_URL
     SUCCESS_REDIRECT_URL = reverse('person:index')
 
     def setUp(self):
@@ -109,6 +110,14 @@ class UpdateViewTests(TestCase):
             'skype':    'jane_doe',
             'contacts': 'Nope'
         }
+
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_update_with_valid_data(self):
         """
@@ -164,3 +173,23 @@ class UpdateViewTests(TestCase):
 
         self.assertEqual(resp.status_code, 200)
         self.assertTrue('jabber' in resp.context['form'].errors)
+
+    def test_anonymous_access_denied(self):
+        """
+            Anonymous should not be able to GET update page.
+
+            Anonymous should not be able to update user via POST
+            (data in DB should not be changed).
+
+            Anonymous should be redirected to the login page.
+        """
+        self.client.logout()
+
+        resp = self.client.get(self.UPDATE_URL)
+        self.assertRedirects(resp, self.LOGIN_REDIRECT_URL)
+
+        old_person = Person.objects.first()
+        resp = self.client.post(self.UPDATE_URL, self.new_data)
+        new_person = Person.objects.first()
+        self.assertEqual(old_person.name, new_person.name)
+        self.assertRedirects(resp, self.LOGIN_REDIRECT_URL)
