@@ -74,6 +74,8 @@ ROOT_URLCONF = 'fortytwo_test_task.urls'
 
 WSGI_APPLICATION = 'fortytwo_test_task.wsgi.application'
 
+LOGIN_REDIRECT_URL = '/'
+
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases

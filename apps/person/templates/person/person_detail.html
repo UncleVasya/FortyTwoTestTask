@@ -6,30 +6,45 @@
 {% endblock page_styles %}
 
 {% block content %}
-    <h1> 42 Coffee Cups test assignment</h1>
+    <div class="row">
+        <div class="col-md-10">
+            <h1> 42 Coffee Cups test assignment </h1>
+        </div>
+
+        <div class="col-md-2">
+            <br>
+            {% if user.is_authenticated %}
+                <a href={% url 'logout' %}> Logout </a>
+            {% else %}
+                <a href={% url 'login' %}> Login </a>
+            {% endif %}
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-5">
             <br>
             <div class="labels">
-                <p id="label_name"> Name: </p>
-                <p id="label_surname"> Last name: </p>
-                <p id="label_birth"> Date of birth: </p>
+                <p> Name: </p>
+                <p> Last name: </p>
+                <p> Date of birth: </p>
             </div>
 
             <div class="values">
                 <p> {{ person.name }} </p>
                 <p> {{ person.surname }} </p>
-                <p> {{ person.birth|date:"M. d, Y" }}</p>
+                <p> {{ person.birth }}</p>
             </div>
+
+
         </div>
 
         <div class="col-md-7">
             <p> Contacts </p>
             <div class="labels">
-                <p id="label_email"> Email: </p>
-                <p id="label_jabber"> Jabber: </p>
-                <p id="label_skype"> Skype: </p>
+                <p> Email: </p>
+                <p> Jabber: </p>
+                <p> Skype: </p>
             </div>
 
             <div class="values">
@@ -42,18 +57,32 @@
 
     <div class="row">
         <div class="col-md-5">
-            <p class="labels" id="label_bio"> Bio: </p>
-            {{ person.bio|linebreaks }}
+            <p class="labels"> Photo: </p>
+            <img class="img-responsive photo" alt="Person photo"
+                {% if person.photo %}
+                    src="{{ person.photo.url }}"
+                {% else %}
+                    src="{{ STATIC_URL}}person/img/no_photo_available.jpg"
+                {% endif %}
+            >
         </div>
 
-        <div class="col-md-7">
-            <p class="labels" id="label_contacts"> Other contacts: </p>
+        <div class=" col-md-7">
+            <br>
+            <p class="labels"> Other contacts: </p>
             {{ person.contacts|linebreaks }}
+
+            <br>
+            <p class="labels"> Bio: </p>
+            {{ person.bio|linebreaks }}
         </div>
     </div> <!-- row -->
 
     <hr>
 
-    <a href={% url 'requestlog:requests'%}> requests </a>
+    <p>
+        <a href={% url 'requestlog:requests'%}> requests </a> |
+        <a href={% url 'person:person_update'%}> update person </a>
+    </p>
 
 {% endblock %}

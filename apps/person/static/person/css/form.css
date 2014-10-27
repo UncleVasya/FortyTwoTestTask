@@ -1,0 +1,21 @@
+div.labels {
+    float: left;
+    line-height: 28px;
+}
+
+input {
+    height: 28px;
+}
+
+input[type=checkbox] {
+    height: auto;
+}
+
+.error {
+    color: red;
+}
+
+.multilines > textarea {
+    height: 10em;
+}
+
