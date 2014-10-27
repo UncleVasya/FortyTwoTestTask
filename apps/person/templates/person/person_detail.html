@@ -6,7 +6,20 @@
 {% endblock page_styles %}
 
 {% block content %}
-    <h1> 42 Coffee Cups test assignment</h1>
+    <div class="row">
+        <div class="col-md-10">
+            <h1> 42 Coffee Cups test assignment </h1>
+        </div>
+
+        <div class="col-md-2">
+            <br>
+            {% if user.is_authenticated %}
+                <a href={% url 'logout' %}> Logout </a>
+            {% else %}
+                <a href={% url 'login' %}> Login </a>
+            {% endif %}
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-5">
@@ -20,7 +33,7 @@
             <div class="values">
                 <p> {{ person.name }} </p>
                 <p> {{ person.surname }} </p>
-                <p> {{ person.birth|date:"M. d, Y" }}</p>
+                <p> {{ person.birth|date:"Y-m-d" }} </p>
             </div>
         </div>
 
@@ -42,18 +55,32 @@
 
     <div class="row">
         <div class="col-md-5">
-            <p class="labels" id="label_bio"> Bio: </p>
-            {{ person.bio|linebreaks }}
+            <p class="labels" id="label_photo"> Photo: </p>
+            <img class="img-responsive photo" alt="Person photo"
+                {% if person.photo %}
+                    src="{{ person.photo.url }}"
+                {% else %}
+                    src="{{ STATIC_URL}}person/img/no_photo_available.jpg"
+                {% endif %}
+            >
         </div>
 
-        <div class="col-md-7">
+        <div class=" col-md-7">
+            <br>
             <p class="labels" id="label_contacts"> Other contacts: </p>
             {{ person.contacts|linebreaks }}
+
+            <br>
+            <p class="labels" id="label_bio"> Bio: </p>
+            {{ person.bio|linebreaks }}
         </div>
     </div> <!-- row -->
 
     <hr>
 
-    <a href={% url 'requestlog:requests'%}> requests </a>
+    <p>
+        <a href={% url 'requestlog:requests'%}> requests </a> |
+        <a href={% url 'person:person_update'%}> update person </a>
+    </p>
 
 {% endblock %}

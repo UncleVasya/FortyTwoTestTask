@@ -1,6 +1,10 @@
- hr {
+hr {
     width: 70%;
     margin-left: 0px;
     border-style: solid;
     border-width: 2px;
+}
+
+.labels {
+    color: blue;
 }
