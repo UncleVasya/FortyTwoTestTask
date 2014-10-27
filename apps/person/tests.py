@@ -1,4 +1,5 @@
 import os
+from PIL import Image
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.datetime_safe import date
@@ -205,7 +206,8 @@ class UpdateViewTests(TestCase):
         person = Person.objects.first()
 
         app_dir = os.path.abspath(apps.person.__path__[0])
-        with open(os.path.join(app_dir, 'test_media/photo.jpg')) as photo:
+        photo_path = os.path.join(app_dir, 'test_media/photo.jpg')
+        with open(photo_path) as photo:
             self.new_data['photo'] = photo
 
             resp = self.client.post(self.UPDATE_URL, self.new_data)
@@ -213,6 +215,11 @@ class UpdateViewTests(TestCase):
 
             updated_person = Person.objects.first()
             self.assertNotEqual(person.photo, updated_person.photo)
+
+            # check that photo was resized on server side
+            original = Image.open(photo_path)
+            saved = Image.open(updated_person.photo.path)
+            self.assertNotEqual(original.size, saved.size)
 
             os.remove(updated_person.photo.path)
 

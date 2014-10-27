@@ -1,3 +1,4 @@
+from PIL import Image
 from django.db import models
 
 
@@ -16,3 +17,14 @@ class Person(models.Model):
 
     def __unicode__(self):
         return "%s %s" % (self.name, self.surname)
+
+    def save(self):
+        super(Person, self).save()
+
+        # if self.photo:
+        #     photo_size = {'height': 350, 'width': 500}
+        #
+        #     photo = Image.open(self.photo.path)
+        #     photo.thumbnail((photo_size['width'], photo_size['height']),
+        #                     Image.ANTIALIAS)
+        #     photo.save(self.photo.path)
