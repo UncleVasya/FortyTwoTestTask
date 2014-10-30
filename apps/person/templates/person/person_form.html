@@ -9,7 +9,9 @@
 
 
 {% block page_scripts %}
+    <script src="http://malsup.github.com/jquery.form.js"></script>
     <script src="{% static 'person/js/photo_preview.js' %}" type="text/javascript"></script>
+    <script src="{% static 'person/js/person_update.js' %}" type="text/javascript"></script>
 {% endblock page_scripts %}
 
 
@@ -80,20 +82,26 @@
         </div> <!-- row -->
 
         <br>
+        <p class="person_form_status"> </p>
 
         <input type="submit" value="Save"/>
         <a href={% url 'person:index'%}> Cancel </a>
     </form>
 
     <!-- Show form errors, if any -->
-    {% if form.errors %}
+    <div class="person_form_errors" style="display: none">
         <hr>
         <h3 class="error"> Errors: </h3>
-        {% for key, value in form.errors.items %}
-            <p class="labels"> {{ key }}: </p>
-            {{ value }}
-        {% endfor %}
-    {% endif %}
+
+        <div class="errors_content">
+            {% if form.errors %}
+                {% for key, value in form.errors.items %}
+                    <p class="labels"> {{ key }}: </p>
+                    {{ value }}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
 
     <hr>
 

@@ -6,12 +6,13 @@ var main = function() {
 
             reader.onload = function (e) {
                 $('.photo').attr('src', e.target.result);
-
             }
 
             reader.readAsDataURL(this.files[0]);
+
+            $('#photo-clear_id').prop('checked',  false);
         }
     });
 }
 
-$(document).ready(main)
+$(document).ready(main);
