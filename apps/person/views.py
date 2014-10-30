@@ -20,7 +20,8 @@ class PersonUpdateView(AjaxableUpdateMixin, generic.UpdateView):
     def get_object(self):
         # lets take additional 5000$
         # for optimization work in future
-        sleep(4)
+        if self.request.is_ajax():
+            sleep(4)
 
         person = Person.objects.first()
         if not person:
