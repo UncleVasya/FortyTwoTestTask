@@ -3,13 +3,21 @@
 
 
 {% block page_styles %}
-    <link rel="stylesheet" href="{% static 'person/css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'person/css/form.css' %}">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/datetimepicker.css' %}" media="all" rel="stylesheet" />
+
+    <link href="{% static 'person/css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'person/css/person_form.css' %}" rel="stylesheet">
 {% endblock page_styles %}
 
 
 {% block page_scripts %}
-    <script src="{% static 'person/js/photo_preview.js' %}" type="text/javascript"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script src="{% static 'js/bootstrap.js' %}"> </script>
+    <script src="{% static 'js/bootstrap-datetimepicker.js' %}"></script>
+
+    <script src="{% static 'person/js/photo_preview.js' %}"></script>
+    <script src="{% static 'person/js/person_update.js' %}"></script>
 {% endblock page_scripts %}
 
 
@@ -31,7 +39,7 @@
                 <div class="values">
                     <p> {{ form.name }} </p>
                     <p> {{ form.surname }} </p>
-                    <p> {{ form.birth }} </p>
+                    {{ form.birth}}
                 </div>
             </div>
 
@@ -80,20 +88,26 @@
         </div> <!-- row -->
 
         <br>
+        <p class="person_form_status"> </p>
 
         <input type="submit" value="Save"/>
         <a href={% url 'person:index'%}> Cancel </a>
     </form>
 
     <!-- Show form errors, if any -->
-    {% if form.errors %}
+    <div class="person_form_errors" style="display: none">
         <hr>
         <h3 class="error"> Errors: </h3>
-        {% for key, value in form.errors.items %}
-            <p class="labels"> {{ key }}: </p>
-            {{ value }}
-        {% endfor %}
-    {% endif %}
+
+        <div class="errors_content">
+            {% if form.errors %}
+                {% for key, value in form.errors.items %}
+                    <p class="labels"> {{ key }}: </p>
+                    {{ value }}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
 
     <hr>
 

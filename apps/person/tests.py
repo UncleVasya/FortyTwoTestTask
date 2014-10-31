@@ -1,3 +1,4 @@
+import json
 import os
 from PIL import Image
 from django.core.urlresolvers import reverse
@@ -133,15 +134,8 @@ class UpdateViewTests(TestCase):
         """
         resp = self.client.post(self.UPDATE_URL, self.new_data)
 
-        person = Person.objects.first()
-        self.assertEqual(person.name, self.new_data['name'])
-        self.assertEqual(person.surname, self.new_data['surname'])
-        self.assertEqual(person.birth, self.new_data['birth'])
-        self.assertEqual(person.email, self.new_data['email'])
-        self.assertEqual(person.jabber, self.new_data['jabber'])
-        self.assertEqual(person.skype, self.new_data['skype'])
-        self.assertEqual(person.contacts, self.new_data['contacts'])
-
+        self.assertTrue(match_person(Person.objects.first(),
+                                     self.new_data))
         self.assertRedirects(resp, self.SUCCESS_REDIRECT_URL)
 
     def test_update_with_invalid_birth(self):
@@ -200,7 +194,7 @@ class UpdateViewTests(TestCase):
         self.assertEqual(old_person.name, new_person.name)
         self.assertRedirects(resp, self.LOGIN_REDIRECT_URL)
 
-    def test_update_with_correct_photo(self):
+    def test_update_with_valid_photo(self):
         """
             Person photo should be updated.
 
@@ -226,7 +220,7 @@ class UpdateViewTests(TestCase):
 
             os.remove(updated_person.photo.path)
 
-    def test_update_with_incorrect_photo(self):
+    def test_update_with_invalid_photo(self):
         """
             User should see update page again
             with corresponding error.
@@ -239,3 +233,45 @@ class UpdateViewTests(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertTrue('photo' in resp.context['form'].errors)
+
+    def test_ajax_update_with_valid_data(self):
+        """
+            Person in DB should be updated with new values.
+
+            User should NOT be redirected to the index page.
+        """
+        resp = self.client.post(self.UPDATE_URL, self.new_data,
+                                HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertTrue(match_person(Person.objects.first(),
+                                     self.new_data))
+        self.assertEqual(resp.status_code, 200)
+
+    def test_ajax_update_with_invalid_data(self):
+        """
+            Response should have code 400.
+
+            Response data should contain form errors.
+        """
+        self.new_data['name'] = ''
+        self.new_data['birth'] = 'bla-bla-bla'
+
+        resp = self.client.post(self.UPDATE_URL, self.new_data,
+                                HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEqual(resp.status_code, 400)
+
+        resp = json.loads(resp.content)
+        self.assertIn('name', resp['errors'])
+        self.assertIn('birth', resp['errors'])
+
+
+def match_person(person, data):
+    return \
+        person.name == data['name'] and \
+        person.surname == data['surname'] and \
+        person.birth == data['birth'] and \
+        person.email == data['email'] and \
+        person.jabber == data['jabber'] and \
+        person.skype == data['skype'] and \
+        person.contacts == data['contacts']
