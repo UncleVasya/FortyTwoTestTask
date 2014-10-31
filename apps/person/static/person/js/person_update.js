@@ -1,11 +1,16 @@
 var main = function() {
     var process_animation;
 
+    // style datepicker widget
+    $('input#id_birth').removeClass('form-control')
+                       .removeAttr('readonly');
+
     $('form').ajaxForm({
         dataType:  'json',
 
         beforeSubmit:  function() {
             $('form :input').prop('disabled', true);
+            $('form .glyphicon-calendar').parent().hide();
             $('form a').hide();
             $('.person_form_errors').hide(350);
             $('.errors_content').empty();
@@ -34,6 +39,7 @@ var main = function() {
 
         complete: function() {
             $('form :input').prop('disabled', false);
+            $('form .glyphicon-calendar').parent().show();
             $('form a').show();
 
             clearInterval(process_animation);
@@ -72,7 +78,6 @@ var main = function() {
             });
 
             $('.person_form_errors').show(350);
-
             $('.person_form_status').text('Failed to update. See errors below')
                                     .removeClass('process')
                                     .addClass('error');

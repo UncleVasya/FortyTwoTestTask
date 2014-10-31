@@ -43,9 +43,12 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'south',
+    'datetimewidget',
+
     'apps.person',
     'apps.requestlog',
     'apps.core',
+
     'selenium_tests'
 )
 
