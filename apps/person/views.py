@@ -1,12 +1,11 @@
 from time import sleep
-from datetimewidget.widgets import DateTimeWidget, DateWidget
+from datetimewidget.widgets import DateWidget
 from django.core.urlresolvers import reverse_lazy
 from django.forms.models import modelform_factory
 from django.http import Http404
 from django.views import generic
 from apps.person.mixins import AjaxableUpdateMixin
 from apps.person.models import Person
-from apps.person.widgets import DateSelectorWidget
 
 
 class IndexView(generic.DetailView):
@@ -20,13 +19,14 @@ class IndexView(generic.DetailView):
 class PersonUpdateView(AjaxableUpdateMixin, generic.UpdateView):
     success_url = reverse_lazy('person:index')
 
-    dateOptions = {
-        'format': 'yyyy-mm-dd',
-        'clearBtn': 'false'
-    }
-
     form_class = modelform_factory(Person, widgets={
-        "birth": DateWidget(options=dateOptions, bootstrap_version=3)
+        "birth": DateWidget(
+            options={
+                'format': 'yyyy-mm-dd',
+                'clearBtn': 'false'
+            },
+            bootstrap_version=3
+        )
     })
 
     def get_object(self):
