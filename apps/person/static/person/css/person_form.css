@@ -26,3 +26,11 @@ input[type=checkbox] {
 .multilines > textarea {
     height: 10em;
 }
+
+/*
+Fix for issue in Chrome that causes
+Bootstrap Datepicker to break page layout.
+*/
+.input-group-addon {
+    width: 0%;
+}
