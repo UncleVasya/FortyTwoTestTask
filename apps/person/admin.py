@@ -5,6 +5,7 @@ from apps.person.models import Person
 class PersonAdmin(admin.ModelAdmin):
     model = Person
 
+    @staticmethod
     def full_name(person):
         return "%s %s" % (person.name, person.surname)
 
