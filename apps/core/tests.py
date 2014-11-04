@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core import urlresolvers
+from django.core.urlresolvers import reverse
 from django.template import RequestContext, Template, Context
 from django.test import TestCase, RequestFactory
 from apps.person.models import Person
@@ -41,12 +41,10 @@ class EditTagTests(TestCase):
         }))
 
         self.assertIn(
-            urlresolvers.reverse('admin:person_person_change',
-                                 args=(person.id,)),
+            reverse('admin:person_person_change', args=(person.id,)),
             html
         )
         self.assertIn(
-            urlresolvers.reverse('admin:requestlog_requestlog_change',
-                                 args=(request.id,)),
+            reverse('admin:requestlog_requestlog_change', args=(request.id,)),
             html
         )
