@@ -45,9 +45,10 @@ INSTALLED_APPS = (
     'south',
     'datetimewidget',
 
+    'apps.core',
     'apps.person',
     'apps.requestlog',
-    'apps.core',
+    'apps.operationlog',
 
     'selenium_tests'
 )

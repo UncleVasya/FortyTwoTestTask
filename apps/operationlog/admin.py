@@ -1,5 +1,6 @@
 from django.contrib import admin
-from apps.core.models import OperationLog
+
+from apps.operationlog.models import OperationLog
 
 
 class OperationLogAdmin(admin.ModelAdmin):

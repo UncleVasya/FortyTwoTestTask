@@ -8,27 +8,25 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Deleting field 'OperationLog.oper_time'
-        db.delete_column(u'core_operationlog', 'oper_time')
-
-        # Adding field 'OperationLog.time'
-        db.add_column(u'core_operationlog', 'time',
-                      self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2014, 11, 7, 0, 0)),
-                      keep_default=False)
+        # Adding model 'OperationLog'
+        db.create_table(u'operationlog_operationlog', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('time', self.gf('django.db.models.fields.DateTimeField')()),
+            ('operation', self.gf('django.db.models.fields.CharField')(max_length=300)),
+            ('obj_class', self.gf('django.db.models.fields.CharField')(max_length=300)),
+            ('obj_module', self.gf('django.db.models.fields.CharField')(max_length=300)),
+            ('obj_pk', self.gf('django.db.models.fields.CharField')(max_length=300)),
+        ))
+        db.send_create_signal(u'operationlog', ['OperationLog'])
 
 
     def backwards(self, orm):
-        # Adding field 'OperationLog.oper_time'
-        db.add_column(u'core_operationlog', 'oper_time',
-                      self.gf('django.db.models.fields.DateTimeField')(auto_now=True, default=datetime.datetime(2014, 11, 7, 0, 0), blank=True),
-                      keep_default=False)
-
-        # Deleting field 'OperationLog.time'
-        db.delete_column(u'core_operationlog', 'time')
+        # Deleting model 'OperationLog'
+        db.delete_table(u'operationlog_operationlog')
 
 
     models = {
-        u'core.operationlog': {
+        u'operationlog.operationlog': {
             'Meta': {'object_name': 'OperationLog'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'obj_class': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
@@ -39,4 +37,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['core']
+    complete_apps = ['operationlog']

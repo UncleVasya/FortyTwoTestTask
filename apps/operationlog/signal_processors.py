@@ -1,7 +1,8 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.timezone import now
-from apps.core.models import OperationLog
+
+from apps.operationlog.models import OperationLog
 
 
 @receiver(post_save)
