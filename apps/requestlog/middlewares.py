@@ -17,14 +17,17 @@ class RequestLogMiddleware(object):
         )
 
     def process_response(self, request, response):
-        self.current_request.response_code = response.status_code
-        self.current_request.time_end = now()
-        self.current_request.save()
+        try:
+            self.current_request.response_code = response.status_code
+            self.current_request.time_end = now()
+            self.current_request.save()
 
-        # update html with latest response_code if needed
-        # (if we have placeholder for it)
-        content = response.content.replace('%response_code%',
-                                           str(response.status_code))
-        response.content = content
+            # update html with latest response_code if needed
+            # (if we have placeholder for it)
+            content = response.content.replace('%response_code%',
+                                               str(response.status_code))
+            response.content = content
+        except AttributeError:
+            pass
 
         return response
