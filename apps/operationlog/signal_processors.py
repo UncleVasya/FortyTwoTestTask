@@ -25,7 +25,7 @@ def object_deleted(sender, instance, using, **kwargs):
         return
 
     OperationLog.objects.create(
-        time = now(),
+        time=now(),
         operation='deleted',
         obj_class=instance.__class__.__name__,
         obj_module=instance.__class__.__module__,
