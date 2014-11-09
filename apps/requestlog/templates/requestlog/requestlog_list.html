@@ -14,6 +14,7 @@
                     <th>Path</th>
                     <th>Address</th>
                     <th>Response</th>
+                    <th>Priority</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +43,26 @@
                             {% else %}
                                 <td> %response_code% </td> <!-- placeholder to fill later -->
                             {%  endif %}
+
+                            <td>
+                                <form action="{% url 'requestlog:request_update' request.pk %}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+
+                                    <select id="id_priority" name="priority">
+                                        {% for i in priority_range %}
+                                            <option value="{{ i }}"
+                                                {% if i == request.priority %}
+                                                    selected="selected"
+                                                {% endif %}>
+
+                                                {{ i }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <input type="submit" value="Update" />
+                                </form>
+                            </td>
                         </tr>
                 {% endfor %}
             </tbody>
