@@ -11,6 +11,11 @@ class RequestLog(models.Model):
     time_start = models.DateTimeField()
     time_end = models.DateTimeField()
     response_code = models.IntegerField()
+    # additional
+    priority = models.PositiveIntegerField(
+        default=1,
+        choices=[(i, i) for i in range(1, 11)]
+    )
 
     def __unicode__(self):
         return "%s  %s  %s" % (self.path, self.address, str(self.time_start))
