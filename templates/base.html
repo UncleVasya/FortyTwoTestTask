@@ -11,15 +11,6 @@
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-        {% block common_styles %}
-            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" >
-            <link href="{% static 'css/screen.css' %}" media="screen, projection" rel="stylesheet" />
-
-        {% endblock common_styles %}
-
-        {% block page_styles %}
-        {% endblock page_styles %}
-
         {% block common_scripts %}
             <script language="javascript"> var STATIC_URL = "{{ STATIC_URL|escapejs }}"; </script>
             <script language="javascript"> var MEDIA_URL = "{{ MEDIA_URL|escapejs }}"; </script>
@@ -27,8 +18,16 @@
             <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
         {% endblock common_scripts %}
 
+        {% block common_styles %}
+            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" >
+            <link href="{% static 'css/screen.css' %}" media="screen, projection" rel="stylesheet" />
+        {% endblock common_styles %}
+
         {% block page_scripts %}
         {% endblock page_scripts %}
+
+        {% block page_styles %}
+        {% endblock page_styles %}
 
         {% block extra_head %}
         {% endblock extra_head %}

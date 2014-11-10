@@ -38,6 +38,8 @@ class RequestsPageTest(LiveServerTestCase):
 
         # check that requests on page are the first ones from DB
         id_fields = body.find_elements_by_class_name('request_id')
+        requests = requests_in_db.order_by('-priority')
+        expected = requests[:self.MAX_REQUESTS_TO_SHOW]
         for i, id_field in enumerate(id_fields):
             self.assertEqual(int(id_field.text),
-                             requests_in_db[i].pk)
+                             expected[i].pk)

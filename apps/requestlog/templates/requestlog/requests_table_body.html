@@ -1,0 +1,40 @@
+{% for request in requestlog_list %}
+    <!-- color row accordingly to response status -->
+    {% if request.response_code == 0 %}
+        <tr class="request warning">
+    {% elif request.response_code >= 400 %}
+        <tr class="request danger">
+    {% else %}
+        <tr class="request success">
+    {% endif %}
+            <td class="request_id">{{ request.pk }} </td>
+            <td> {{ request.time_start }} </td>
+            <td> {{ request.method }} </td>
+            <td> {{ request.path }} </td>
+            <td> {{ request.address }} </td>
+
+            {% if request.response_code != 0 %}
+                <td> {{ request.response_code }} </td>
+            {% else %}
+                <td> %response_code% </td> <!-- placeholder to fill later -->
+            {%  endif %}
+
+            <td>
+                <form action="{% url 'requestlog:request_update' request.pk %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <select id="id_priority" name="priority">
+                        {% for i in priority_range %}
+                            <option value="{{ i }}"
+                                {% if i == request.priority %}
+                                    selected="selected"
+                                {% endif %}>
+
+                                {{ i }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </td>
+        </tr>
+{% endfor %}
