@@ -24,7 +24,7 @@ class RequestLoggingTests(TestCase):
             Helper function to check rendered html
             for correct requests data
         """
-        rendered_requests = content.count('class="request ')
+        rendered_requests = content.count('request ')
         self.assertEqual(rendered_requests, request_list.count())
 
         for request in request_list:
@@ -36,10 +36,11 @@ class RequestLoggingTests(TestCase):
         RequestLog.objects.all().delete()
         # make some requests and remember them
         urls = cycle(self.REQUEST_URLS)
-        for _ in range(self.REQUESTS_TO_MAKE):
+        for n in range(self.REQUESTS_TO_MAKE):
             path = urls.next()
             req = RequestFactory().get(path)
             resp = self.client.get(path)
+            RequestLog.objects.all()[n].priority = n % 10
             self.requests_done.append({'request': req, 'response_code': resp.status_code})
 
     def tearDown(self):
@@ -87,12 +88,14 @@ class RequestLoggingTests(TestCase):
         self.assertEqual(self.MAX_REQUESTS_TO_SHOW, returned.count())
 
         # check if requests are correct
-        for request, db_request in zip(returned, RequestLog.objects.all()):
+        requests = RequestLog.objects.all().order_by('-priority')
+        expected = requests[:self.MAX_REQUESTS_TO_SHOW]
+        for request, db_request in zip(returned, expected):
             self.assertEqual(db_request, request)
 
         # check html render
         self.assertTemplateUsed('requestslog/requestlog_list.html')
-        self.check_requests_render(returned, resp.content)
+        self.check_requests_render(expected, resp.content)
 
     def test_request_page_with_empty_db(self):
         """
@@ -128,8 +131,10 @@ class RequestLoggingTests(TestCase):
         # make few requests,
         # but less than REQUESTS_TO_SHOW value
         req_count = self.MAX_REQUESTS_TO_SHOW / 2
-        for _ in range(req_count):
+        for n in range(req_count):
             self.client.get(reverse('admin:index'))
+            RequestLog.objects.all()[n].priority = (n % 10) + 1
+
 
         resp = self.client.get(reverse('requestlog:requests'))
         req_count += 1
@@ -142,3 +147,46 @@ class RequestLoggingTests(TestCase):
 
         self.assertTemplateUsed('requestslog/requestlog_list.html')
         self.check_requests_render(returned, resp.content)
+
+    def test_ajax_update_request(self):
+        """
+            Request in DB should be updated with new values.
+        """
+        request = RequestLog.objects.get(pk=13)
+        old_priority = request.priority
+        new_priority = old_priority + 2
+
+        resp = self.client.post(
+            reverse('requestlog:request_update', args=(13,)),
+            {'priority': new_priority},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        # check if priority changed in DB
+        request = RequestLog.objects.get(pk=13)
+        self.assertEqual(request.priority, new_priority)
+
+
+    def test_ajax_list_request(self):
+        """
+            Response should contain html table with requests.
+        """
+        resp = self.client.get(reverse('requestlog:requests'),
+                                HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        # check if we have request list in response
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('requestlog_list' in resp.context)
+
+        # check if requests count is correct
+        returned = resp.context['requestlog_list']
+        self.assertEqual(self.MAX_REQUESTS_TO_SHOW, returned.count())
+
+        # check if requests are correct
+        requests = RequestLog.objects.all().order_by('-priority')
+        expected = requests[:self.MAX_REQUESTS_TO_SHOW]
+        for request, db_request in zip(returned, expected):
+            self.assertEqual(request, db_request)
+
+        # check html render
+        self.assertTemplateUsed('requestslog/requests_table_body.html')
+        self.check_requests_render(expected, resp.content)

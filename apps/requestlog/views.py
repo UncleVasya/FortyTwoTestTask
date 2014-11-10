@@ -25,9 +25,3 @@ class RequestUpdateView(generic.UpdateView):
     model = RequestLog
     success_url = reverse_lazy('requestlog:requests')
     form_class = modelform_factory(RequestLog, fields=('priority',))
-
-    def get_object(self):
-        # if self.request.is_ajax():
-        #     sleep(4)
-
-        return super(RequestUpdateView, self).get_object()

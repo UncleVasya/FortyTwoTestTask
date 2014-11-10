@@ -9,7 +9,8 @@
             "query": "",
             "address": "127.0.0.1:8000",
             "path": "/admin/jsi18n/",
-            "method": "GET"
+            "method": "GET",
+            "priority": 2
         }
     },
     {
@@ -22,7 +23,8 @@
             "query": "",
             "address": "127.0.0.1:8000",
             "path": "/some/wrong/url/",
-            "method": "POST"
+            "method": "POST",
+            "priority": 3
         }
     },
     {
@@ -35,7 +37,8 @@
             "query": "",
             "address": "127.0.0.1:8000",
             "path": "/another/wrong/url/",
-            "method": "GET"
+            "method": "GET",
+            "priority": 1
         }
     }
 ]
