@@ -135,7 +135,6 @@ class RequestLoggingTests(TestCase):
             self.client.get(reverse('admin:index'))
             RequestLog.objects.all()[n].priority = (n % 10) + 1
 
-
         resp = self.client.get(reverse('requestlog:requests'))
         req_count += 1
 
@@ -165,13 +164,12 @@ class RequestLoggingTests(TestCase):
         request = RequestLog.objects.get(pk=13)
         self.assertEqual(request.priority, new_priority)
 
-
     def test_ajax_list_request(self):
         """
             Response should contain html table with requests.
         """
         resp = self.client.get(reverse('requestlog:requests'),
-                                HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+                               HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         # check if we have request list in response
         self.assertEqual(resp.status_code, 200)
