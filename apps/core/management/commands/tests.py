@@ -1,4 +1,5 @@
 from StringIO import StringIO
+from sys import stdout, stderr
 from django.core.management import call_command, CommandError
 from django.test import TestCase
 
@@ -27,3 +28,6 @@ class PrintModelsTest(TestCase):
 
         self.assertTrue(all(model in out for model in default_models))
         self.assertTrue(all(model in err for model in default_models))
+
+        stdout.write(out)
+        stderr.write(err)
