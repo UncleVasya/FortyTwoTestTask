@@ -8,9 +8,12 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         self.stderr.write('Error:')
         for ct in ContentType.objects.all():
-            m = ct.model_class()
-            to_print = "%s.%s\t%d" % \
-                       (m.__module__, m.__name__, m.objects.all().count())
+            try:
+                m = ct.model_class()
+                to_print = "%s.%s\t%d" % \
+                           (m.__module__, m.__name__, m.objects.all().count())
 
-            self.stdout.write(to_print)
-            self.stderr.write(to_print)
+                self.stdout.write(to_print)
+                self.stderr.write(to_print)
+            except AttributeError:
+                pass

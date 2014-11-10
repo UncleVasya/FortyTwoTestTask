@@ -3,6 +3,7 @@ SETTINGS=fortytwo_test_task.settings
 
 test:
 	PYTHONPATH=`pwd` DJANGO_SETTINGS_MODULE=$(SETTINGS) $(MANAGE) test person requestlog core
+	PYTHONPATH=`pwd` DJANGO_SETTINGS_MODULE=$(SETTINGS) $(MANAGE) print_models
 
 selenium_test:
 	PYTHONPATH=`pwd` DJANGO_SETTINGS_MODULE=$(SETTINGS) $(MANAGE) test selenium_tests
