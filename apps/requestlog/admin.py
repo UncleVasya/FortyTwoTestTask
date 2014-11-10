@@ -11,6 +11,8 @@ class RequestLogAdmin(admin.ModelAdmin):
 
         ('Data',
             {'fields': [['path', 'query', 'method'], 'address']}),
+        ('Additional',
+            {'fields': ['priority']}),
     ]
 
     list_display = ('time_start', 'path', 'method', 'response_code', 'address')

@@ -8,3 +8,15 @@ hr {
 .labels {
     color: blue;
 }
+
+.process_ongoing {
+    color: darkorange;
+}
+
+.process_success {
+    color: darkgreen;
+}
+
+.process_error {
+    color: red;
+}
