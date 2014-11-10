@@ -16,8 +16,8 @@ var main = function() {
             $('.errors_content').empty();
 
             $('.person_form_status').text('Updating data')
-                                    .removeClass('success error')
-                                    .addClass('process');
+                                    .removeClass('process_success process_error')
+                                    .addClass('process_ongoing');
 
             process_animation = setInterval(function() {
                 MAX_DOTS = 8;
@@ -47,8 +47,8 @@ var main = function() {
 
         success: function(data) {
             $('.person_form_status').text('Data updated')
-                                    .removeClass('process')
-                                    .addClass('success');
+                                    .removeClass('process_ongoing')
+                                    .addClass('processsuccess');
 
             // reset photo name
             $('#id_photo').wrap('<form>').closest('form').get(0).reset();
@@ -79,8 +79,8 @@ var main = function() {
 
             $('.person_form_errors').show(350);
             $('.person_form_status').text('Failed to update. See errors below')
-                                    .removeClass('process')
-                                    .addClass('error');
+                                    .removeClass('process_ongoing')
+                                    .addClass('process_error');
         }
     });
 }

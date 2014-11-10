@@ -11,18 +11,6 @@ input[type=checkbox] {
     height: auto;
 }
 
-.process {
-    color: darkorange;
-}
-
-.success {
-    color: darkgreen;
-}
-
-.error {
-    color: red;
-}
-
 .multilines > textarea {
     height: 10em;
 }

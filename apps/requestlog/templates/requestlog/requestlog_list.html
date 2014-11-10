@@ -1,9 +1,16 @@
 {% extends "base.html" %}
-{% load edit_link %}
+{% load staticfiles %}
+
+{% block page_scripts %}
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+
+    <script src="{% static 'requestlog/js/requestlog_update.js' %}"></script>
+{% endblock page_scripts %}
 
 {% block content %}
     <h1> Requests log</h1>
     <br>
+    <p class="process_ongoing"> &nbsp </p>
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead>
@@ -18,53 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for request in requestlog_list %}
-                    <!-- color row accordingly to response status -->
-                    {% if request.response_code == 0 %}
-                        <tr class="request warning">
-                    {% elif request.response_code >= 400 %}
-                        <tr class="request danger">
-                    {% else %}
-                        <tr class="request success">
-                    {% endif %}
-                            <td class="request_id">
-                                {{ request.pk }}
-                                {% if user.is_authenticated %}
-                                    ({% edit_link request %})
-                                {% endif %}
-                            </td>
-                            <td> {{ request.time_start }} </td>
-                            <td> {{ request.method }} </td>
-                            <td> {{ request.path }} </td>
-                            <td> {{ request.address }} </td>
-
-                            {% if request.response_code != 0 %}
-                                <td> {{ request.response_code }} </td>
-                            {% else %}
-                                <td> %response_code% </td> <!-- placeholder to fill later -->
-                            {%  endif %}
-
-                            <td>
-                                <form action="{% url 'requestlog:request_update' request.pk %}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-
-                                    <select id="id_priority" name="priority">
-                                        {% for i in priority_range %}
-                                            <option value="{{ i }}"
-                                                {% if i == request.priority %}
-                                                    selected="selected"
-                                                {% endif %}>
-
-                                                {{ i }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-
-                                    <input type="submit" value="Update" />
-                                </form>
-                            </td>
-                        </tr>
-                {% endfor %}
+                {% include "requestlog/requests_table_body.html" %}
             </tbody>
         </table>
     </div>
